@@ -26,7 +26,17 @@
 
   <!-- Add your site or application content here -->
   <p>Odin Library</p>
-  <button type="button">New book</button>
+  <div id="books"></div>
+  <form action="addBookToLibrary()">
+    <label for="bTitle">Book title:</label><br>
+    <input type="text" id="bTitle" name="bTitle" value=""><br>
+    <label for="aname">Author name:</label><br>
+    <input type="text" id="aname" name="aname" value=""><br>
+    <label for="pages" id="pages" name="pages" value="">Number of Pages</label><br>
+    <input type="text" id="pages" name="pages" value=""><br>
+    <input type="submit" id="id-submit" value="Submit">
+  </form>
+  <button type="button" onclick="">New book</button>
   <script src="js/scripts.js"></script>
 
 </body>
