@@ -8,3 +8,8 @@
     margin: 10px;
     border-radius: 5px;
 }
+.read-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

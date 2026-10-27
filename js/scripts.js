@@ -81,6 +81,27 @@ function displayBooks() {
         read.textContent = book.read ? "Read" : "Not read yet";
         card.append(read);
 
+        const readcheckbox = document.createElement("input");
+        readcheckbox.type = 'checkbox';
+        readcheckbox.id = `read-${book.id}`;
+        readcheckbox.name = 'readcheckbox'
+        readcheckbox.checked = book.read;
+        
+        const label = document.createElement('label');
+        label.htmlFor = `read-${book.id}`;
+        label.textContent = "Read this book?";
+
+        readcheckbox.addEventListener("change", function() {
+            book.toggleRead();
+            displayBooks();
+        });
+
+        const readWrapper = document.createElement("div");
+        readWrapper.classList.add("read-toggle");
+
+        readWrapper.append(readcheckbox, label);
+        card.append(readWrapper);
+
         container.appendChild(card);
     } 
 }
