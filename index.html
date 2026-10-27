@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Odin Library</title>
-  <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="">
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- <meta name="description" content="">
 
   <meta property="og:title" content="">
   <meta property="og:type" content="">
@@ -19,24 +19,33 @@
   <link rel="apple-touch-icon" href="icon.png">
 
   <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#fafafa">
+  <meta name="theme-color" content="#fafafa"> -->
 </head>
 
 <body>
 
-  <!-- Add your site or application content here -->
   <p>Odin Library</p>
   <div id="books"></div>
-  <form action="addBookToLibrary()">
-    <label for="bTitle">Book title:</label><br>
-    <input type="text" id="bTitle" name="bTitle" value=""><br>
-    <label for="aname">Author name:</label><br>
-    <input type="text" id="aname" name="aname" value=""><br>
-    <label for="pages" id="pages" name="pages" value="">Number of Pages</label><br>
-    <input type="text" id="pages" name="pages" value=""><br>
-    <input type="submit" id="id-submit" value="Submit">
-  </form>
-  <button type="button" onclick="">New book</button>
+  <dialog id="book-dialog">
+    <form>
+      <label for="bTitle">Book title:</label><br>
+      <input type="text" id="bTitle" name="bTitle" required><br>
+  
+      <label for="aname">Author name:</label><br>
+      <input type="text" id="aname" name="aname" required><br>
+  
+      <label for="pages" name="pages">Number of Pages</label><br>
+      <input type="number" id="pages" name="pages" min="1" required><br>
+  
+      <label for="read">Read?</label><br>
+      <input type="checkbox" id="read" name="read" value="false"><br>
+  
+      <input type="submit" value="Add book">
+      <button type="button" command="close" commandfor="book-dialog">Cancel</button>
+    </form>
+  </dialog>
+  
+  <button type="button" command="show-modal" commandfor="book-dialog">New book</button>
   <script src="js/scripts.js"></script>
 
 </body>

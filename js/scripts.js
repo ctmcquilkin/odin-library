@@ -1,9 +1,23 @@
 const myLibrary = [];
 
-const submitBtn = document.querySelector("#id-submit");
-submitBtn.addEventListener("click", addBookToLibrary);
+const form = document.querySelector("form");
+const dialog = document.querySelector("#book-dialog");
+form.addEventListener("submit", handleSubmit);
 
-function book(title, author, numOfPages) {
+function handleSubmit(event) {
+    event.preventDefault();
+
+    const title = document.querySelector("#bTitle").value;
+    const author = document.querySelector("#aname").value;
+    const numOfPages = document.querySelector("#pages").value;
+    const read = document.querySelector("#read").checked;
+    addBookToLibrary(title, author, numOfPages, read);
+    displayBooks();
+    form.reset();
+    dialog.close();
+}
+
+function Book(title, author, numOfPages, read) {
     if (!new.target) {
         throw Error("You must use the 'new' operator to call the constructor");
     };
@@ -11,30 +25,63 @@ function book(title, author, numOfPages) {
     this.title = title;
     this.author = author;
     this.numOfPages = numOfPages;
+    this.read = read;
     // use crypto.randomUUID() to create a random ID
     this.id = crypto.randomUUID();
-    this.info = function() {
-    console.log(this.title, this.author, this.numberOfPages);
-  };
 }
 
-function addBookToLibrary(event) {
-    let title = bname;
-    let author = aname;
-    let numOfPages = pages;
+Book.prototype.toggleRead = function() {
+    this.read = !this.read;
+}
 
-    myLibrary.push(title, author, numOfPages);
+Book.prototype.info = function() {
+    console.log(this.title, this.author, this.numOfPages);
+}
 
-    event.preventDefault();
-
- // take prams, create a book, then store it in the array.
+function addBookToLibrary(title, author, numOfPages, read) {
+    // take prams, create a book, then store it in the array.
+    const newBook = new Book(title, author, numOfPages, read);
+    myLibrary.push(newBook);
 }
 
 function displayBooks() {
-    const books = document.getElementById("books");
-    for (let i = 0; i < myLibrary.length; i++) {
-        books.innerHTML = "<p>i.title</p><p>i.author</p><p>i.numOfPages)</p>";
-    }
- // function to loop through the array and display each book on the page. 
+    // function to loop through the array and display each book on the page.
+    const container = document.getElementById("books");
+    container.innerHTML = "";
+
+    for (const book of myLibrary) {
+        const card = document.createElement("div");
+        card.classList.add("book-card");
+        card.dataset.id = book.id;
+
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+        removeButton.addEventListener("click", function() {
+            const index = myLibrary.findIndex((b) => b.id === card.dataset.id);
+            if (index !== -1) {
+                myLibrary.splice(index, 1);
+            }
+            displayBooks();
+        });
+        card.append(removeButton);
+
+        const title = document.createElement("p");
+        title.textContent = book.title;
+        card.append(title);
+
+        const author = document.createElement("p");
+        author.textContent = book.author;
+        card.append(author);
+
+        const numOfPages = document.createElement("p");
+        numOfPages.textContent = book.numOfPages;
+        card.append(numOfPages);
+
+        const read = document.createElement("p");
+        read.textContent = book.read ? "Read" : "Not read yet";
+        card.append(read);
+
+        container.appendChild(card);
+    } 
 }
 
