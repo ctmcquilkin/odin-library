@@ -4,20 +4,45 @@ const form = document.querySelector("form");
 const dialog = document.querySelector("#book-dialog");
 form.addEventListener("submit", handleSubmit);
 
-function handleSubmit(event) {
+async function handleSubmit(event) {
     event.preventDefault();
 
     const title = document.querySelector("#bTitle").value;
     const author = document.querySelector("#aname").value;
     const numOfPages = document.querySelector("#pages").value;
     const read = document.querySelector("#read").checked;
-    addBookToLibrary(title, author, numOfPages, read);
-    displayBooks();
+
     form.reset();
     dialog.close();
+
+    const coverUrl = await fetchCoverUrl(title, author);
+    addBookToLibrary(title, author, numOfPages, read, coverUrl);
+    displayBooks();
 }
 
-function Book(title, author, numOfPages, read) {
+async function fetchCoverUrl(title, author) {
+    const params = new URLSearchParams({
+        title: title,
+        author: author,
+        fields: "cover_i",
+        limit: 1,
+    });
+
+    try {
+        const response = await fetch(`https://openlibrary.org/search.json?${params}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const coverId = data.docs[0]?.cover_i;
+        return coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` : null;
+    } catch (err) {
+        console.error("Cover lookup failed", err);
+        return null;
+    }
+}
+
+function Book(title, author, numOfPages, read, coverUrl) {
     if (!new.target) {
         throw Error("You must use the 'new' operator to call the constructor");
     };
@@ -28,6 +53,7 @@ function Book(title, author, numOfPages, read) {
     this.read = read;
     // use crypto.randomUUID() to create a random ID
     this.id = crypto.randomUUID();
+    this.coverUrl = coverUrl;
 }
 
 Book.prototype.toggleRead = function() {
@@ -38,9 +64,9 @@ Book.prototype.info = function() {
     console.log(this.title, this.author, this.numOfPages);
 }
 
-function addBookToLibrary(title, author, numOfPages, read) {
+function addBookToLibrary(title, author, numOfPages, read, coverUrl) {
     // take prams, create a book, then store it in the array.
-    const newBook = new Book(title, author, numOfPages, read);
+    const newBook = new Book(title, author, numOfPages, read, coverUrl);
     myLibrary.push(newBook);
 }
 
@@ -64,6 +90,14 @@ function displayBooks() {
             displayBooks();
         });
         card.append(removeButton);
+
+        if (book.coverUrl) {
+            const cover = document.createElement("img");
+            cover.src = book.coverUrl;
+            cover.alt = `Cover of ${book.title}`;
+            cover.classList.add("book-cover");
+            card.append(cover);
+        }
 
         const title = document.createElement("p");
         title.textContent = book.title;

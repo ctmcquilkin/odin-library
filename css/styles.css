@@ -13,3 +13,9 @@
     align-items: center;
     gap: 0.5rem;
 }
+.book-cover {
+    width: 100%;
+    max-width: 150px;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+}
